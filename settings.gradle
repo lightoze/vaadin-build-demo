@@ -1,0 +1,6 @@
+pluginManagement {
+    plugins {
+        id 'com.vaadin' version "${vaadinVersion}"
+        id 'com.google.cloud.tools.jib' version '3.1.4'
+    }
+}

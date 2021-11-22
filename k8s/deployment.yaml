@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaadin-build-demo
+  labels:
+    app.kubernetes.io/name: vaadin-build-demo
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vaadin-build-demo
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vaadin-build-demo
+    spec:
+      containers:
+      - name: app
+        image: vaadin-build-demo
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 8081
+          name: management
+        startupProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: management
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: management
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: management
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "sh", "-c", "sleep 10" ]

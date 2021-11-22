@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'com.vaadin'
+    id 'com.google.cloud.tools.jib'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = '11'
+}
+
+dependencies {
+    implementation platform('org.springframework.boot:spring-boot-dependencies:2.6.0')
+    implementation platform('org.springframework:spring-framework-bom:5.3.13')
+    implementation platform("com.vaadin:vaadin-bom:$vaadinVersion")
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'com.vaadin:vaadin-spring-boot-starter'
+}
+
+vaadin {
+    pnpmEnable = true
+    productionMode = true
+}
+
+jib {
+    from {
+        image = 'adoptopenjdk:11'
+    }
+}
+
+tasks.matching {
+    it.name.startsWith('jib')
+}.configureEach {
+    dependsOn tasks.named('vaadinBuildFrontend')
+}

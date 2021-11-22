@@ -1,0 +1,6 @@
+apiVersion: skaffold/v2beta24
+kind: Config
+build:
+  artifacts:
+  - image: vaadin-build-demo
+    jib: { }
